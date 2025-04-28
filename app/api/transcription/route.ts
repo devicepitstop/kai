@@ -1,21 +1,19 @@
 // app/api/transcription/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
-import handler from '@/src/api/transcription/updateHandler';
+import { detectIntent } from '@/lib/nlp';
+import { updateTicket } from '@/tasks/updateTicket';
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const result = await handler(
-    {
-      method: 'POST',
-      body,
-    } as any,
-    {
-      status: (code: number) => ({
-        json: (data: any) => NextResponse.json(data, { status: code }),
-        end: (text: string) => new Response(text, { status: code }),
-      }),
-      json: (data: any) => NextResponse.json(data),
-    } as any,
-  );
-  return result;
+  const { text } = await req.json();
+  if (!text) return NextResponse.json({ error: 'No text provided' }, { status: 400 });
+
+  const intent = detectIntent(text);
+
+  if (intent.type === 'update') {
+    await updateTicket(intent.data);
+    return NextResponse.json({ status: 'Ticket updated' });
+  }
+
+  return NextResponse.json({ status: 'No actionable intent' });
 }
