@@ -1,5 +1,6 @@
 // app/api/transcription/route.ts
 
+import { UpdatePayload } from '@/types/tickets';
 import { NextRequest, NextResponse } from 'next/server';
 import { detectIntent } from '@/lib/nlp';
 import { updateTicket } from '@/tasks/updateTicket';
