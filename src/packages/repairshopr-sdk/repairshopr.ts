@@ -22,7 +22,8 @@ export class RepairShoprClient {
       async get(id: number) {
         return this.request(`tickets/${id}`);
       },
-      async update(id: number, body: any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async update(id: number, body: any) {...
         return this.request(`tickets/${id}`, {
           method: 'PUT',
           body: JSON.stringify(body),

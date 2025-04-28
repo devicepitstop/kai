@@ -1,7 +1,6 @@
 // src/lib/nlp.ts
 
 import { UpdatePayload } from '../types/tickets';
-import Fuse from 'fuse.js';
 
 /** --- Phase 2 Creation Logic --- */
 export type Priority = 'Low' | 'Normal' | 'High';
