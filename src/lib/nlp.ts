@@ -12,9 +12,10 @@ const STATUS_MAP = {
   progress: "In Progress",
 } as const;
 
-export interface IntentResult =
+export type IntentResult =
   | { type: "create"; data: CreatePayload }
   | { type: "update"; data: Partial<UpdatePayload> };
+
 
 export function detectIntent(text: string): IntentResult {
   const isUpdate = UPDATE_SYNONYMS.test(text);

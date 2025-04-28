@@ -1,18 +1,27 @@
-import { UpdatePayload } from '../types/tickets';
+// src/tasks/updateTicket.ts
+
+import { UpdatePayload } from '@/types/tickets';
+import { RepairShopr } from '@/lib/repairshopr';
 import { sendCustomerMessage } from './sendCustomerMessage';
-import { rs } from '@/lib/repairshopr'; // assuming your RepairShopr client lives here
 
-export async function updateTicket(pay: UpdatePayload) {
-  const ticket = await findTicketByCustomer(pay.customerName);
-  if (!ticket) throw new Error("TICKET_NOT_FOUND");
+const rs = new RepairShopr({
+  subdomain: process.env.RS_SUBDOMAIN!,
+  apiKey: process.env.RS_API_KEY!,
+  userToken: process.env.RS_USER_TOKEN!,
+});
 
-  await rs.updateTicket(ticket.id, { status: pay.ticketStatus });
+export async function updateTicket(payload: UpdatePayload) {
+  const ticket = await rs.tickets.findByCustomerName(payload.customerName);
+  if (!ticket) throw new Error("Ticket not found");
 
-  const note = `${pay.publicNote}${pay.amountOwed ? ` Balance $${pay.amountOwed}.` : ""}`;
-  await rs.addPublicNote(ticket.id, note);
+  await rs.tickets.update(ticket.id, {
+    status: payload.ticketStatus,
+  });
+
+  await rs.tickets.addPublicNote(ticket.id, payload.publicNote);
 
   await sendCustomerMessage({
     customerId: ticket.customer_id,
-    body: `Hi ${pay.customerName.split(" ")[0]}, ${note} You can pick up your device anytime!`,
+    body: `Hi ${payload.customerName.split(' ')[0]}, ${payload.publicNote}`,
   });
 }
