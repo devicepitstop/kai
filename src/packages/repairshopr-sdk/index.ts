@@ -1,4 +1,4 @@
-import { RepairShopr } from './repairshopr';
+import { RepairShoprClient } from './repairshopr';
 
-export { RepairShopr };
+export { RepairShoprClient };
 export type { Ticket, Customer, Part } from './types';
