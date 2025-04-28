@@ -14,7 +14,8 @@ export default function KaiPage() {
     const startRecorder = async () => {
       console.log('🎙️ Starting recording with RecorderJS...');
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioContextConstructor = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const audioCtx = new AudioContextConstructor();
       const newRecorder = new Recorder(audioCtx);
 
       await newRecorder.init(stream);
