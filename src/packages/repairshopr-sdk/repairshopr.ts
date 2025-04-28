@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // src/packages/repairshopr-sdk/repairshopr.ts
 
 export class RepairShoprClient {
