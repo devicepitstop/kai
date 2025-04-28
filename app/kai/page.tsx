@@ -22,7 +22,7 @@ export default function KaiPage() {
       await newRecorder.init(stream)
       newRecorder.start()
 
-      setRecorder(newRecorder)
+      setRecorder(newRecorder as Recorder)
       setAudioContext(audioCtx)
 
       console.log('🟢 Recorder started.')
