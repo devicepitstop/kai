@@ -7,7 +7,7 @@ import Recorder from 'recorder-js'
 
 export default function KaiPage() {
   const [isRecording, setIsRecording] = useState(false)
-  const [recorder, setRecorder] = useState<Recorder | null>(null)
+  const [recorder, setRecorder] = useState<typeof Recorder | null>(null);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
 
   useEffect(() => {
