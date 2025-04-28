@@ -1,8 +1,8 @@
 // app/api/transcription/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { detectIntent } from '../../../lib/nlp';
-import { updateTicket } from '../../../updateTicket';
+import { detectIntent } from '../../../../src/lib/nlp';
+import { updateTicket } from '../../../../src/tasks/updateTicket';
 
 export async function POST(req: NextRequest) {
   const { text } = await req.json();
