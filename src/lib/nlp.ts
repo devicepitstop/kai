@@ -3,6 +3,21 @@
 import { UpdatePayload } from '../types/tickets';
 import Fuse from 'fuse.js';
 
+/** --- Phase 2 Creation Logic --- */
+export type Priority = 'Low' | 'Normal' | 'High';
+
+export interface PartNeeded {
+  name: string;
+  cost_estimate?: number;
+}
+
+export interface CreatePayload {
+  subject: string;
+  problem_type: string;
+  priority: Priority;
+  parts_needed: PartNeeded[];
+}
+
 /** --- Phase 4 Update Logic --- */
 const UPDATE_SYNONYMS = /(update|set|mark|close|finish)/i;
 const STATUS_MAP = {
@@ -15,7 +30,6 @@ const STATUS_MAP = {
 export type IntentResult =
   | { type: "create"; data: CreatePayload }
   | { type: "update"; data: Partial<UpdatePayload> };
-
 
 export function detectIntent(text: string): IntentResult {
   const isUpdate = UPDATE_SYNONYMS.test(text);
@@ -40,28 +54,6 @@ function buildNote(text: string, amount?: string) {
   const base = text.replace(/\$?\d+\s?(bucks|dollars)?/i, '').trim();
   return `${base}${amount ? ` Balance $${amount}.` : ""}`;
 }
-
-/** --- Phase 2 Creation Logic --- */
-export type Priority = 'Low' | 'Normal' | 'High';
-
-export interface PartNeeded {
-  name: string;
-  cost_estimate?: number;
-}
-
-export interface CreatePayload {
-  subject: string;
-  problem_type: string;
-  priority: Priority;
-  parts_needed: PartNeeded[];
-}
-
-const PROBLEM_MAP: Record<string, { type: string; priority: Priority }> = {
-  battery: { type: 'Battery', priority: 'High' },
-  screen: { type: 'Display', priority: 'Normal' },
-  charger: { type: 'Charging Port', priority: 'Normal' },
-  keyboard: { type: 'Keyboard', priority: 'Normal' },
-};
 
 export function parseTranscript(txt: string): CreatePayload {
   const lower = txt.toLowerCase();
@@ -90,3 +82,10 @@ function inferParts(text: string, key: string): PartNeeded[] {
   if (key === 'keyboard') return [{ name: 'Keyboard' }];
   return [];
 }
+
+const PROBLEM_MAP: Record<string, { type: string; priority: Priority }> = {
+  battery: { type: 'Battery', priority: 'High' },
+  screen: { type: 'Display', priority: 'Normal' },
+  charger: { type: 'Charging Port', priority: 'Normal' },
+  keyboard: { type: 'Keyboard', priority: 'Normal' },
+};

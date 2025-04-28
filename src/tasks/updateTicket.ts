@@ -1,7 +1,7 @@
 // src/tasks/updateTicket.ts
 
 import { UpdatePayload } from '@/types/tickets';
-import { RepairShopr } from '@/lib/repairshopr';
+import { RepairShopr } from '@/packages/repairshopr-sdk';
 import { sendCustomerMessage } from './sendCustomerMessage';
 
 const rs = new RepairShopr({
