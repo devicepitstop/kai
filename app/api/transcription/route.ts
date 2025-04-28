@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   const intent = detectIntent(text);
 
   if (intent.type === 'update') {
-    await updateTicket(intent.data);
+    await updateTicket(intent.data as UpdatePayload);
     return NextResponse.json({ status: 'Ticket updated' });
   }
 
