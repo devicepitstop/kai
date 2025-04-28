@@ -1,4 +1,4 @@
-export class RepairShopr {
+export class RepairShoprClient {
     constructor(private apiKey: string) {}
   
     async request(endpoint: string, options: RequestInit = {}) {

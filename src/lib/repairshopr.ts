@@ -1,6 +1,3 @@
-import { RepairShoprClient } from '@/packages/repairshopr-sdk';
+import { RepairShoprClient } from '@/packages/repairshopr-sdk/repairshopr';
 
-export const repairShopr = new RepairShoprClient({
-  apiKey: process.env.RS_API_KEY!,
-  userToken: process.env.RS_USER_TOKEN!,
-});
+export const repairShopr = new RepairShoprClient(process.env.RS_API_KEY!);
