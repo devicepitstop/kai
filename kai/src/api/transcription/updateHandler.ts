@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { detectIntent } from '../../../lib/nlp';
+import { detectIntent } from '../../../../lib/nlp';
 import { updateTicket } from '../../../../tasks/updateTicket';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
