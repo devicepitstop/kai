@@ -1,3 +1,5 @@
+// src/packages/repairshopr-sdk/repairshopr.ts
+
 export class RepairShoprClient {
     constructor(private apiKey: string) {}
   
@@ -6,30 +8,29 @@ export class RepairShoprClient {
       const res = await fetch(url, {
         ...options,
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
-          ...(options.headers || {})
-        }
+          ...(options.headers || {}),
+        },
       });
       if (!res.ok) throw new Error(`RepairShopr API error: ${res.status}`);
       return res.json();
     }
   
     tickets = {
-      async list() {
+      async list(): Promise<any> {
         return this.request('tickets');
       },
-      async get(id: number) {
+      async get(id: number): Promise<any> {
         return this.request(`tickets/${id}`);
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async update(id: number, body: any) {...
+      async update(id: number, body: Record<string, unknown>): Promise<any> {
         return this.request(`tickets/${id}`, {
           method: 'PUT',
           body: JSON.stringify(body),
         });
       },
-      async addPublicNote(id: number, body: string) {
+      async addPublicNote(id: number, body: string): Promise<any> {
         return this.request(`tickets/${id}/comments`, {
           method: 'POST',
           body: JSON.stringify({ body, hidden: false }),
@@ -38,15 +39,15 @@ export class RepairShoprClient {
     };
   
     customers = {
-      async get(id: number) {
+      async get(id: number): Promise<any> {
         return this.request(`customers/${id}`);
-      }
+      },
     };
   
     parts = {
-      async list() {
+      async list(): Promise<any> {
         return this.request('parts');
-      }
+      },
     };
   }
   
