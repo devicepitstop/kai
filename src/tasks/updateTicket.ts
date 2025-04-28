@@ -1,27 +1,31 @@
 // src/tasks/updateTicket.ts
 
 import { UpdatePayload } from '@/types/tickets';
-import { RepairShopr } from '@/packages/repairshopr-sdk';
+import { RepairShoprClient } from '@/packages/repairshopr-sdk';
 import { sendCustomerMessage } from './sendCustomerMessage';
 
-const rs = new RepairShopr({
-  subdomain: process.env.RS_SUBDOMAIN!,
-  apiKey: process.env.RS_API_KEY!,
-  userToken: process.env.RS_USER_TOKEN!,
-});
+const repairShopr = new RepairShoprClient(process.env.RS_API_KEY!);
 
 export async function updateTicket(payload: UpdatePayload) {
-  const ticket = await rs.tickets.findByCustomerName(payload.customerName);
+  // Find the ticket by customer name
+  const tickets = await repairShopr.tickets.list();
+  const ticket = tickets.find(t => 
+    t.customer_business_then_name?.toLowerCase().includes(payload.customerName!.toLowerCase())
+  );
+  
   if (!ticket) throw new Error("Ticket not found");
 
-  await rs.tickets.update(ticket.id, {
+  // Update the ticket status
+  await repairShopr.tickets.update(ticket.id, {
     status: payload.ticketStatus,
   });
 
-  await rs.tickets.addPublicNote(ticket.id, payload.publicNote);
+  // Add a public note
+  await repairShopr.tickets.addPublicNote(ticket.id, payload.publicNote);
 
+  // Send a customer message
   await sendCustomerMessage({
     customerId: ticket.customer_id,
-    body: `Hi ${payload.customerName.split(' ')[0]}, ${payload.publicNote}`,
+    body: `Hi ${payload.customerName?.split(' ')[0]}, ${payload.publicNote}`,
   });
 }
